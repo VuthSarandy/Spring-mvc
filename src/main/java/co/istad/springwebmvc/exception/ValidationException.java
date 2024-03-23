@@ -18,27 +18,27 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ValidationException {
 
-    @ExceptionHandler(ResponseStatusException.class)
-         ResponseEntity<?> handleServiceErrors(ResponseStatusException ex){
-        return ResponseEntity.status( ex.getStatusCode())
-                .body(Map.of("errors", ex.getReason()));
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, Object> handleValidationErrors(MethodArgumentNotValidException ex) {
 
-        List<Map<String, Object>> errors = new ArrayList<>();
 
-        ex.getBindingResult().getFieldErrors()
+    public Map<String,Object> handleValidationError(MethodArgumentNotValidException ex){
+        List<Map<String, Object>> errorList = new ArrayList<>();
+        ex.getFieldErrors().stream()
                 .forEach(fieldError -> {
                     Map<String, Object> error = new HashMap<>();
-                    error.put("field", fieldError.getField());
-                    error.put("reason", fieldError.getDefaultMessage());
-                    errors.add(error);
+                    error.put("field",fieldError.getField());
+                    error.put("message",fieldError.getDefaultMessage());
+                    errorList.add(error);
                 });
+        return Map.of("error",errorList);
+    }
 
-        return Map.of("errors", errors);
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<?> handleServiceError(ResponseStatusException ex){
+        return ResponseEntity.status(ex.getStatusCode())
+                .body(Map.of("error",ex.getReason()));
     }
 
 }

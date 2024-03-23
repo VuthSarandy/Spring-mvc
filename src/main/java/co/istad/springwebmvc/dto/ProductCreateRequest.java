@@ -1,19 +1,19 @@
 package co.istad.springwebmvc.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 public record ProductCreateRequest(
         @NotBlank
+        @NotEmpty
+        @Size(max = 50)
         String name,
         @Positive
         @NotNull
         Double price,
         @Positive
         @NotNull
-        @Max(100)
+        @Min(1)
+        @Max(200)
         Integer qty
 
 ) {

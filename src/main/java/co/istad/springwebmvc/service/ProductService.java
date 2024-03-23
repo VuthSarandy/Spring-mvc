@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<ProductResponse> findProducts(String name, Boolean status);
+    List<ProductResponse> findProducts();
 
     ProductResponse findProductById(Integer id);
 
@@ -16,7 +16,7 @@ public interface ProductService {
 
     void createNewProduct(ProductCreateRequest request);
 
-    void editProductByUuid(ProductEditRequest request,String uuid);
+    ProductResponse editProductByUuid(ProductEditRequest request, String uuid);
     void  deleteProductByUuid(String uuid);
 }
 
